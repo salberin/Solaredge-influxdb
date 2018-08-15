@@ -1,0 +1,3 @@
+aioinflux >= 0.3.3
+pymodbusTCP >= 0.1.6
+pymodbus
