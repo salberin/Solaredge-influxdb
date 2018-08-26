@@ -85,7 +85,7 @@ async def write_to_influx(dbhost, dbport, dbname='solaredge'):
         except InfluxDBWriteError as e:
             logger.error('Failed to write to InfluxDb: {0}'.format(e))
         except Exception as e:
-            logger.error('Unhandled exception: {0}'.format(e), exc_info=True)
+            logger.error('Unhandled exception: {0}'.format(e))
 
         await asyncio.sleep(5)
 
