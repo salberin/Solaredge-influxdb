@@ -71,7 +71,7 @@ async def write_to_influx(dbhost, dbport, dbname='solaredge'):
                 datapoint['fields']['DC Power input'] = trunc_float(data.decode_16bit_int() * scalefactor)
 
                 datapoint['time'] = str(datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat())
-                logger.debug('Writing to Influx: {str(datapoint)}')
+                logger.debug(f'Writing to Influx: {str(datapoint)}')
 
                 await solar_client.write(datapoint)
             else:
@@ -102,12 +102,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     logging.basicConfig()
-    if args.debug >= 1:
+    if args.debug and args.debug >= 1:
         logging.getLogger('solaredge').setLevel(logging.DEBUG)
-    if args.debug == 2:
+    if args.debug and args.debug == 2:
         logging.getLogger('aioinflux').setLevel(logging.DEBUG)
 
     print('Starting up solaredge monitoring')
+    print(f'Connecting to Solaredge inverter {args.solaredge} on port {args.port} using unitid {args.unitid}')
+    print(f'Writing data to influxDb {args.influxdb} on port {args.influxport}')
     client = ModbusClient(args.solaredge, port=args.port, unit_id=args.unitid, auto_open=True)
     logger.debug('Running eventloop')
     asyncio.get_event_loop().run_until_complete(write_to_influx(args.influxdb, args.influxport))
