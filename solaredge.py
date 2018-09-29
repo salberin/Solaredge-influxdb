@@ -30,7 +30,7 @@ async def write_to_influx(dbhost, dbport, dbname='solaredge'):
         solar_client = InfluxDBClient(host=dbhost, port=dbport, db=dbname)
         await solar_client.create_database(db=dbname)
     except ClientConnectionError as e:
-        logger.error('Error during connection to InfluxDb {0}: {1}'.format(dbhost, e))
+        logger.error(f'Error during connection to InfluxDb {dbhost}: {e}')
         return
 
     logger.info('Database opened and initialized')
@@ -71,21 +71,23 @@ async def write_to_influx(dbhost, dbport, dbname='solaredge'):
                 datapoint['fields']['DC Power input'] = trunc_float(data.decode_16bit_int() * scalefactor)
 
                 datapoint['time'] = str(datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat())
-                logger.debug('Writing to Influx: ' + str(datapoint))
+                logger.debug('Writing to Influx: {str(datapoint)}')
 
                 await solar_client.write(datapoint)
             else:
                 # Error during data receive
                 if client.last_error() == 2:
-                    logger.error('Failed to connect to SolarEdge inverter {0}!'.format(client.host()))
+                    logger.error(f'Failed to connect to SolarEdge inverter {client.host()}!')
                 elif client.last_error() == 3 or client.last_error() == 4:
                     logger.error('Send or receive error!')
                 elif client.last_error() == 5:
                     logger.error('Timeout during send or receive operation!')
         except InfluxDBWriteError as e:
-            logger.error('Failed to write to InfluxDb: {0}'.format(e))
+            logger.error(f'Failed to write to InfluxDb: {e}')
+        except IOError as e:
+            logger.error(f'I/O exception during operation: {e}')
         except Exception as e:
-            logger.error('Unhandled exception: {0}'.format(e))
+            logger.error(f'Unhandled exception: {e}')
 
         await asyncio.sleep(5)
 
