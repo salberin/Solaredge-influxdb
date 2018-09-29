@@ -4,7 +4,8 @@ SolarEdge InfluxDB monitor
 this is a simple python tool to export SolarEdge inverter data to
 an InfluxDb <https://www.influxdata.com/time-series-platform/influxdb/> for monitoring purposes. It works by reading the inverter
 data from a SolarEdge inverter that has its ModBusTCP interface activated.
-It then connects via TCP and reads the SunSpec modbus registers via ModBusTCP
+It then connects via TCP and reads the SunSpec modbus registers via ModBusTCP.
+It requires Python 3.6+ to run.
 
 Usage:
 ------
