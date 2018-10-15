@@ -43,6 +43,7 @@ async def write_to_influx(dbhost, dbport, dbname='solaredge'):
                 data.skip_bytes(12)
                 scalefactor = 10**data.decode_16bit_int()
                 data.skip_bytes(-10)
+                # Register 40072-40075
                 datapoint['fields']['AC Total Current'] = trunc_float(data.decode_16bit_uint() * scalefactor)
                 datapoint['fields']['AC Current phase A'] = trunc_float(data.decode_16bit_uint() * scalefactor)
                 datapoint['fields']['AC Current phase B'] = trunc_float(data.decode_16bit_uint() * scalefactor)
@@ -50,24 +51,34 @@ async def write_to_influx(dbhost, dbport, dbname='solaredge'):
                 data.skip_bytes(14)
                 scalefactor = 10**data.decode_16bit_int()
                 data.skip_bytes(-8)
+                # register 40080-40082
                 datapoint['fields']['AC Voltage phase A'] = trunc_float(data.decode_16bit_uint() * scalefactor)
                 datapoint['fields']['AC Voltage phase B'] = trunc_float(data.decode_16bit_uint() * scalefactor)
                 datapoint['fields']['AC Voltage phase C'] = trunc_float(data.decode_16bit_uint() * scalefactor)
                 data.skip_bytes(4)
                 scalefactor = 10**data.decode_16bit_int()
                 data.skip_bytes(-4)
+                # register 40084
                 datapoint['fields']['AC Power output'] = trunc_float(data.decode_16bit_int() * scalefactor)
-                data.skip_bytes(26)
+                data.skip_bytes(24)
                 scalefactor = 10**data.decode_16bit_int()
-                data.skip_bytes(-4)
+                data.skip_bytes(-6)
+                # register 40094
+                datapoint['fields']['AC Lifetimeproduction'] = trunc_float(data.decode_32bit_uint() * scalefactor)
+                data.skip_bytes(2)
+                scalefactor = 10**data.decode_16bit_int()
+                data.skip_bytes(-2)
+                # register 40097
                 datapoint['fields']['DC Current'] = trunc_float(data.decode_16bit_uint() *scalefactor)
                 data.skip_bytes(4)
                 scalefactor = 10**data.decode_16bit_int()
                 data.skip_bytes(-4)
+                # register 40099
                 datapoint['fields']['DC Voltage'] = trunc_float(data.decode_16bit_uint() * scalefactor)
                 data.skip_bytes(4)
                 scalefactor = 10**data.decode_16bit_int()
                 data.skip_bytes(-4)
+                # datapoint 40101
                 datapoint['fields']['DC Power input'] = trunc_float(data.decode_16bit_int() * scalefactor)
 
                 datapoint['time'] = str(datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat())
