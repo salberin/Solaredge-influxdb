@@ -20,7 +20,7 @@ datapoint = {
 logger = logging.getLogger('solaredge')
 
 
-async def write_to_influx(dbhost, dbport, dbname='solaredge'):
+async def write_to_influx(dbhost, dbport, period, dbname='solaredge'):
     global client
 
     def trunc_float(floatval):
@@ -100,7 +100,7 @@ async def write_to_influx(dbhost, dbport, dbname='solaredge'):
         except Exception as e:
             logger.error(f'Unhandled exception: {e}')
 
-        await asyncio.sleep(5)
+        await asyncio.sleep(period)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -109,6 +109,7 @@ if __name__ == '__main__':
     parser.add_argument('--port', type=int, default=502, help='ModBus TCP port number to use')
     parser.add_argument('--unitid', type=int, default=1, help='ModBus unit id to use in communication')
     parser.add_argument('solaredge', metavar='SolarEdge IP', help='IP address of the SolarEdge inverter to monitor')
+    parser.add_argument('--period', '-p', type=int, default=5)
     parser.add_argument('--debug', '-d', action='count')
     args = parser.parse_args()
 
@@ -120,7 +121,7 @@ if __name__ == '__main__':
 
     print('Starting up solaredge monitoring')
     print(f'Connecting to Solaredge inverter {args.solaredge} on port {args.port} using unitid {args.unitid}')
-    print(f'Writing data to influxDb {args.influxdb} on port {args.influxport}')
+    print(f'Writing data to influxDb {args.influxdb} on port {args.influxport} every     {args.period} seconds')
     client = ModbusClient(args.solaredge, port=args.port, unit_id=args.unitid, auto_open=True)
     logger.debug('Running eventloop')
-    asyncio.get_event_loop().run_until_complete(write_to_influx(args.influxdb, args.influxport))
+    asyncio.get_event_loop().run_until_complete(write_to_influx(args.influxdb, args.influxport, args.period))
