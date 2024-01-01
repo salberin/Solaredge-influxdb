@@ -39,7 +39,9 @@ async def write_to_influx(dbhost, dbport, period, dbname='solaredge'):
             reg_block = client.read_holding_registers(40069, 38)
             if reg_block:
                 # print(reg_block)
-                data = BinaryPayloadDecoder.fromRegisters(reg_block, byteorder=Endian.Big, wordorder=Endian.Big)
+                data = BinaryPayloadDecoder.fromRegisters(
+                    reg_block, byteorder=Endian.BIG, wordorder=Endian.BIG
+                )
                 data.skip_bytes(12)
                 scalefactor = 10**data.decode_16bit_int()
                 data.skip_bytes(-10)

@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.10.13-alpine
 
 MAINTAINER alberink@gmail.com
 
@@ -9,9 +9,7 @@ ENV INVERTERPORT=502
 ENV UNITID=1
 
 ADD requirements.txt /
-RUN apk add --no-cache --update alpine-sdk && \
-    pip3 install -r /requirements.txt && \
-    apk del alpine-sdk
+RUN pip3 install -r /requirements.txt
 
 ADD solaredge.py /
 
