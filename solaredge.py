@@ -100,7 +100,7 @@ async def write_to_influx(dbhost, dbport, period, dbname='solaredge'):
         except IOError as e:
             logger.error(f'I/O exception during operation: {e}')
         except Exception as e:
-            logger.error(f'Unhandled exception: {e}')
+            logger.exception(f'Unhandled exception: {e}')
 
         await asyncio.sleep(period)
 
