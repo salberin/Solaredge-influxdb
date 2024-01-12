@@ -84,16 +84,16 @@ async def write_to_influx(dbhost, dbport, period, dbname="solaredge"):
                 datapoint["fields"]["AC Power output"] = decode_value(
                     data.decode_16bit_int(), scalefactor
                 )
-                data.skip_bytes(24)
+                data.skip_bytes(22)
                 scalefactor = 10 ** data.decode_16bit_int()
                 data.skip_bytes(-6)
                 # register 40094
                 datapoint["fields"]["AC Lifetimeproduction"] = decode_value(
                     data.decode_32bit_uint(), scalefactor
                 )
-                data.skip_bytes(2)
+                data.skip_bytes(4)
                 scalefactor = 10 ** data.decode_16bit_int()
-                data.skip_bytes(-2)
+                data.skip_bytes(-4)
                 # register 40097
                 datapoint["fields"]["DC Current"] = decode_value(
                     data.decode_16bit_uint() * scalefactor
