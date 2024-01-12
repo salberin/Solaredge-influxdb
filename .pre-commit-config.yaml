@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: c4a0b883114b00d8d76b479c820ce7950211c99b  # frozen: v4.5.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+  - repo: https://github.com/psf/black
+    rev: ec91a2be3c44d88e1a3960a4937ad6ed3b63464e  # frozen: 23.12.1
+    hooks:
+      - id: black
+  - repo: https://github.com/rhysd/actionlint
+    rev: ea8102762106cdca9c88829f1295b39a544706f3  # frozen: v1.6.26
+    hooks:
+      - id: actionlint
