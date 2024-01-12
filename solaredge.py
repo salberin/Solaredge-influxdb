@@ -1,13 +1,13 @@
 import argparse
+import asyncio
 import datetime
 import logging
 
 from aiohttp import ClientConnectionError
-from pyModbusTCP.client import ModbusClient
+from aioinflux import InfluxDBClient, InfluxDBWriteError
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
-import asyncio
-from aioinflux import InfluxDBClient, InfluxDBWriteError
+from pyModbusTCP.client import ModbusClient
 
 datapoint = {"measurement": "SolarEdge", "tags": {"inverter": "1"}, "fields": {}}
 
