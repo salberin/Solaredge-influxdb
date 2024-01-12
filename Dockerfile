@@ -14,4 +14,3 @@ RUN pip3 install -r /requirements.txt
 ADD solaredge.py /
 
 CMD python3 /solaredge.py --influxdb $INFLUXDB --influxport $INFLUXPORT --port $INVERTERPORT --unitid $UNITID $INVERTER
-
