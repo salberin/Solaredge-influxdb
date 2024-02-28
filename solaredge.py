@@ -122,15 +122,10 @@ async def write_to_influx(dbhost, dbport, period, dbname="solaredge"):
 
                 await solar_client.write(datapoint)
             else:
-                # Error during data receive
-                if client.last_error() == 2:
-                    logger.error(
-                        f"Failed to connect to SolarEdge inverter {client.host()}!"
-                    )
-                elif client.last_error() == 3 or client.last_error() == 4:
-                    logger.error("Send or receive error!")
-                elif client.last_error() == 5:
-                    logger.error("Timeout during send or receive operation!")
+                logger.error(
+                    "Failed while connecting or receiving data from "
+                    f"SolarEdge inverter {client.host}: {client.last_error_as_txt}"
+                )
         except InfluxDBWriteError as e:
             logger.error(f"Failed to write to InfluxDb: {e}")
         except IOError as e:
